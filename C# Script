@@ -1,0 +1,161 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using System; 
+using System.Linq;
+using System.IO; 
+using System.Text; 
+using System.Threading.Tasks;
+
+
+
+
+
+
+//always a mesh filter on script 
+[RequireComponent(typeof(MeshFilter))]
+public class MeshGenerator : MonoBehaviour
+{
+    Mesh mesh;
+    Vector3[] vertices;
+    int[] triangles; 
+
+    public int xSize = 20;
+    public int zSize = 20;
+
+    // Start is called before the first frame update
+    void Start()
+    {
+        //Debug.Log(GetData());
+        GetData();
+        mesh = new Mesh();
+        GetComponent<MeshFilter>().mesh = mesh;
+
+        //StartCoroutine(CreateShape());
+        CreateShape();
+         //tell mesh to use data 
+        UpdateMesh();
+        
+    }
+
+    private static List<int> GetData()
+    {      
+        // Create an instance of StreamReader to read from a file.
+        // The using statement also closes the StreamReader.
+        using (StreamReader sr = new StreamReader(@"C:/Users/James.Finestone/DataVisualiser/Assets/fake.txt"))
+        {
+            string line;
+            char[] delimiterChars = {'[', ']'};
+
+            // Read and display lines from the file until the end of
+            // the file is reached.
+            while ((line = sr.ReadLine()) != null)
+            {
+                string[] element = line.Split(delimiterChars);
+                //creating an empty list to add the values and the coordinates 
+                List<int> values= new List<int>();
+                List<int> coordinates= new List<int>();
+                //int[] array = new int[] {};
+                //Debug.Log(element);
+                for (int i=0; i<element.Length; i++)
+                {
+                    if (i == 1)
+                    {
+                    //array[element[i]];
+                    values.Add(i);
+                    //Debug.Log(element[i]);
+                    }
+                     if (i == 3)
+                    {
+                    //array[element[i]];
+                    coordinates.Add(i);
+                    Debug.Log(element[i]);
+                    }
+                } 
+                    //I cant seem to both values and coordinates at the same time
+                    //returning the coordinates is what I need for now to plot the spheres 
+                    Debug.Log(coordinates);
+                    return(coordinates);
+            }
+            return null;
+        }
+    }
+ 
+
+    // Update is called once per frame
+    //IEnumerator CreateShape()
+    void CreateShape()
+    {
+        //if we had three squares we need four vertices 
+        vertices = new Vector3[(xSize + 1) * (zSize + 1)];
+        //int i = 0;
+        //loop over each vertices and assigne them a position on the grid
+        //from left to right  
+        for (int i = 0, z = 0; z <= zSize; z++)
+        {
+            //loop over all squares on x 
+            for (int x = 0; x <= xSize; x++)
+            {
+                float y = Mathf.PerlinNoise(x * .3f, z *.3f) * 2f;
+                //0 on y for flat plane 
+                vertices[i] = new Vector3(x, y, z);
+                i++;
+            }    
+        } 
+
+        //6 points for each square (two triangles)
+        triangles = new int[xSize * zSize * 6];
+
+        int vert = 0;
+        int tris = 0; 
+
+        for (int z = 0; z < zSize; z++)
+        {
+            //loop that iterates through all the squares on the x
+            for (int x = 0; x < xSize; x++)
+            {
+            triangles[tris + 0] = vert + 0; 
+            triangles[tris + 1] = vert + xSize + 1;
+            triangles[tris + 2] = vert + 1; 
+            triangles[tris + 3] = vert + 1;
+            triangles[tris + 4] = vert + xSize + 1; 
+            triangles[tris + 5] = vert + xSize + 2;
+
+            // shift all triangles one to the right
+            vert++;
+            tris += 6; 
+
+            // to gradually see the covering of the squares
+            //yield return new WaitForSeconds(.0001f);
+            }
+           vert++;
+        }
+
+          
+    }
+    void UpdateMesh()
+    {
+        //clear mesh from any previous data
+        mesh.Clear();
+        mesh.vertices = vertices;
+        mesh.triangles = triangles; 
+
+        mesh.RecalculateNormals(); 
+    } 
+
+    
+    void OnDrawGizmos()
+    {
+        //Gizmos.color = Color.blue;
+        if (vertices == null)
+            return; 
+
+        for (int i = 0; i < vertices.Length; i++)
+        {
+            Gizmos.DrawSphere(vertices[i], .1f);
+        }
+            
+    }
+    
+}
+
