@@ -52,8 +52,8 @@ public class MeshGenerator : MonoBehaviour
     private List<Point> GetData()
     {      
         List<Point> myPoints = new List<Point>();
-            // StreamReader sr1 = new StreamReader(@"C:/Users/James.Finestone/DataVisualiser/Assets/fake.json");
-            string jsonString = File.ReadAllText(@"C:/Users/James.Finestone/DataVisualiser/Assets/testme2.json");
+            // StreamReader sr1 = new StreamReader(@"C:/Users/Noah.Finestone/DataVisualiser/Assets/fake.json");
+            string jsonString = File.ReadAllText(@"C:/Users/Noah.Finestone/DataVisualiser/Assets/testme2.json");
             MyParsedJSON myImportData =   JsonConvert.DeserializeObject<MyParsedJSON>(jsonString);
             for(int i = 0; i < myImportData.Points.Count; ++i){
                 //Debug.Log("X value =  " + i + " " + myImportData.Points[i].x);
@@ -97,99 +97,7 @@ public class MeshGenerator : MonoBehaviour
         float B = 2 - Mathf.Abs(H * 6 - 4);
         return new Vector3(Mathf.Clamp01(R), Mathf.Clamp01(G), Mathf.Clamp01(B));
     }
-
-
-
-/*
-    //Every point (xyz) represents a cube in space?
-    //Where do the points come from just so i know when explaining?
-    
-    public static System.Drawing.Color FromArgb (int red, int green, int blue);
-
-    public static FromArgb GetColor()
-    {
-        string jsonString = File.ReadAllText(@"C:/Users/James.Finestone/DataVisualiser/Assets/testme2.json");
-        MyParsedJSON myImportData = JsonConvert.DeserializeObject<MyParsedJSON>(jsonString);
-
-        for(int i = 0; i < myImportData.Points.Count; ++i){
-
-            float percent = myImportData.Values[i]/100; 
-
-            int red, green;
-            if (percent < 0.5)
-            {
-                red = 255;
-                green = (int)(255* percent / 0.5);  //closer to 0.5, closer to yellow (255,255,0)
-                cube.GetComponent<MeshRenderer>().material.color = new Color(red , green, 0);
-            }
-            if (percent > 1) //<0?
-            { 
-                cube.GetComponent<MeshRenderer>().material.color = Color.Black; 
-                return Color.Black; 
-            }
-            else
-            {
-                green = 255;
-                red = 255 - (int)(255*( percent - 0.5) / 0.5); //closer to green (0,255,0)
-                cube.GetComponent<MeshRenderer>().material.color = new Color(red , green, 0);               
-            }      
-            return Color.FromArgb(red, green, 0);    
-        }
-     }
-
-    
-
-        /*
-
-
-        // Create an instance of StreamReader to read from a file.
-        // The using statement also closes the StreamReader.
-        /*
-        using (StreamReader sr = new StreamReader(@"C:/Users/James.Finestone/DataVisualiser/Assets/testme2.json"))
-        {
-
-
-        
-            string line;
-            char[] delimiterChars = {'[', ']'};
-
-            // Read and display lines from the file until the end of
-            // the file is reached.
-            while ((line = sr.ReadLine()) != null)
-            {
-                string[] element = line.Split(delimiterChars);
-                //creating an empty list to add the values and the coordinates 
-                List<int> values= new List<int>();
-                List<int> coordinates= new List<int>();
-                //int[] array = new int[] {};
-                //Debug.Log(element);
-                for (int i=0; i<element.Length; i++)
-                {
-                    if (i == 1)
-                    {
-                    //array[element[i]];
-                    values.Add(i);
-                    //Debug.Log(element[i]);
-                    }
-                     if (i == 3)
-                    {
-                    //array[element[i]];
-                    coordinates.Add(i);
-                    Debug.Log(element[i]);
-                    }
-                } 
-                    //I cant seem to both values and coordinates at the same time
-                    //returning the coordinates is what I need for now to plot the spheres 
-                    Debug.Log(coordinates);
-                    return(coordinates);
-            }
-            return null;
-        }
-        */
-    
- 
-
-    
+  
     void CreateModel()
     {
         //if we had three squares we need four vertices 
